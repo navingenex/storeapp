@@ -14,10 +14,9 @@ mongoose.connection.on('connected', () => {
 
 const app = express();
 const users = require('./routes/users');
-const port = 3000;
-
+var port = process.env.PORT || 8080; 
 app.use(cors());
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
 //authentication
@@ -31,9 +30,12 @@ require('./config/passport')(passport);
 
 app.use('/users', users);
 //index routes
-app.get('/', (req, res) => {
-    res.send('home');
-});
+// app.get('/', (req, res) => {
+//     res.send('home');
+// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+})
 
 app.listen(port, () => {
     console.log('Server running on port:' + port);
